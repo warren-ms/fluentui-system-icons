@@ -21,26 +21,25 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-#    - name: Bump version patch
-#      run: |
-#        grep -E "[0-9]+\.[0-9]+\.[0-9]+" FluentIcons.podspec | python3 -c """
-#        import sys
-#        import os
-#        current_version = sys.stdin.read().strip().split(\"'\")[1]
-#        major, minor, patch = current_version.split('.')
-#        os.system(f'echo \"NEW_VERSION={major}.{minor}.{int(patch) + 1}\" >> \$GITHUB_ENV') 
-#        """
-
-#    - name: Bump react version patch
-#      run: |
-#        grep -E "[0-9]+\.[0-9]+\.[0-9]+" ./packages/react-icons/package.json | python3 -c """
-#        import sys
-#        import os
-#        current_version = sys.stdin.read().strip().split(':')[1]
-#        current_version = current_version.split('\"')[1]
-#        major,minor,asset = current_version.split('.')
-#        os.system(f'echo \"REACT_VERSION={major}.{minor}.{int(asset) + 1}\" >> \$GITHUB_ENV')
-#        """
+    - name: Bump version patch
+      run: |
+        grep -E "[0-9]+\.[0-9]+\.[0-9]+" FluentIcons.podspec | python3 -c """
+        import sys
+        import os
+        current_version = sys.stdin.read().strip().split(\"'\")[1]
+        major, minor, patch = current_version.split('.')
+        os.system(f'echo \"NEW_VERSION={major}.{minor}.{int(patch) + 1}\" >> \$GITHUB_ENV') 
+        """
+    - name: Bump react version patch
+      run: |
+        grep -E "[0-9]+\.[0-9]+\.[0-9]+" ./packages/react-icons/package.json | python3 -c """
+        import sys
+        import os
+        current_version = sys.stdin.read().strip().split(':')[1]
+        current_version = current_version.split('\"')[1]
+        major,minor,asset = current_version.split('.')
+        os.system(f'echo \"REACT_VERSION={major}.{minor}.{int(asset) + 1}\" >> \$GITHUB_ENV')
+        """ 
 
     # Needs to be "-E" instead of "-r" on macOS
     - name: Replace version number in react-native-icons/package.json
