@@ -17,6 +17,7 @@ const SRC_PATH = argv.source;
 const DEST_PATH = argv.dest;
 const REACT_NATIVE = argv.native;
 const TSX_EXTENSION = '.tsx'
+const exportNameRegex = /export const (\S*)/gm;
 
 const rnSvgElements = ['Path', 'Circle', 'Ellipse', 'G', 'Line', 'Polygon', 'Polyline', 'Rect', 'Symbol', 'Text', 'Use', 'Defs', 'LinearGradient', 'RadialGradient', 'Stop', 'ClipPath', 'Pattern', 'Mask'];
 
@@ -49,7 +50,10 @@ function processFiles(src, dest) {
   iconContents.forEach((chunk, i) => {
     const chunkFileName = `chunk-${i}`
     const chunkPath = path.resolve(iconPath, `${chunkFileName}.tsx`);
-    indexContents.push(`export * from './icons/${chunkFileName}'`);
+
+    const exportNames = Array.from(chunk.matchAll(exportNameRegex), m => m[1]);
+    indexContents.push(`export { ${exportNames.join(', ')} } from './icons/${chunkFileName}'`);
+    
     fs.writeFileSync(chunkPath, chunk, (err) => {
       if (err) throw err;
     });
@@ -66,7 +70,10 @@ function processFiles(src, dest) {
   sizedIconContents.forEach((chunk, i) => {
     const chunkFileName = `chunk-${i}`
     const chunkPath = path.resolve(sizedIconPath, `${chunkFileName}.tsx`);
-    indexContents.push(`export * from './sizedIcons/${chunkFileName}'`);
+    
+    const exportNames = Array.from(chunk.matchAll(exportNameRegex), m => m[1]);
+    indexContents.push(`export { ${exportNames.join(', ')} } from './sizedIcons/${chunkFileName}'`);
+
     fs.writeFileSync(chunkPath, chunk, (err) => {
       if (err) throw err;
     });
